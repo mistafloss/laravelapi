@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 class QuoteController extends Controller
 {
     public function postQuote(Request $request){
-        if(! $user = JWTAuth::parseToken()->authenticate()){
-            return response()->json(['message' => 'User not found'], 404);
-        }
+        $user = JWTAuth::parseToken()->toUser();
         $quote = new Quote();
         $quote->content = $request->input('content');
         $quote->save();
-        return response()->json(['quote' => $quote], 201);
+        return response()->json(['quote' => $quote, 'user' => $user], 201);
     }
 
     public function getQuotes(){
